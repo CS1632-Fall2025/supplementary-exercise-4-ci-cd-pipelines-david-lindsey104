@@ -18,9 +18,17 @@ public class RentACatImpl implements RentACat {
 	 */
 
 	public boolean returnCat(int id) {
-		// TODO: Fill in
-		return false;
-	}
+        Cat cat = getCat(id);
+        if (cat == null) return false;
+        if (cat.getRented()) {
+            cat.returnCat();
+            System.out.println("Welcome back, " + cat.getName() + "!");
+            return true;
+        } else {
+            System.out.println(cat.getName() + " is already here!");
+            return false;
+        }
+    }
 
 	/**
 	 * Rent a cat. This should call the .rentCat() method on the cat for the
@@ -33,9 +41,17 @@ public class RentACatImpl implements RentACat {
 	 */
 
 	public boolean rentCat(int id) {
-		// TODO: Fill in
-		return false;
-	}
+        Cat cat = getCat(id);
+        if (cat == null) return false;
+        if (!cat.getRented()) {
+            cat.rentCat();
+            System.out.println(cat.getName() + " has been rented.");
+            return true;
+        } else {
+            System.out.println("Sorry, " + cat.getName() + " is not here!");
+            return false;
+        }
+    }
 
 	/**
 	 * Rename a cat. This calls the .renameCat(String) method on the cat for the
@@ -47,9 +63,11 @@ public class RentACatImpl implements RentACat {
 	 */
 
 	public boolean renameCat(int id, String name) {
-		// TODO: Fill in
-		return false;
-	}
+        Cat cat = getCat(id);
+        if (cat == null) return false;
+        cat.renameCat(name);
+        return true;
+    }
 
 	/**
 	 * Create a String list from the list of cats using the .toString() method of
@@ -62,9 +80,17 @@ public class RentACatImpl implements RentACat {
 	 */
 
 	public String listCats() {
-		// TODO: Fill in
-		return "WRITE CODE FOR THIS";
-	}
+        if (cats == null || cats.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder();
+        for (Cat cat : cats) {
+            if (!cat.getRented()) {
+                sb.append("ID ").append(cat.getId())
+                  .append(". ").append(cat.getName())
+                  .append("\n");
+            }
+        }
+        return sb.toString();
+    }
 
 	/**
 	 * Given an id, return a reference to the specified cat if a cat with that ID
@@ -75,28 +101,16 @@ public class RentACatImpl implements RentACat {
 	 */
 
 	private Cat getCat(int id) {
-
-		// null check
-		if (cats == null) {
-			return null;
-		}
-
-		// Loop through every cat in the cat list
-		for (Cat c : cats) {
-			// If we found a cat whose id matches the id
-			// of the argument, then we have a match and
-			// can thus return a reference to that cat
-			if (c.getId() == id) {
-				return c;
-			}
-		}
-		// If we get all the way through the list and did
-		// not find a cat whose ID matches the passed-in
-		// ID, then the cat is not in the list
-		System.out.println("Invalid cat ID.");
-		return null;
-
-	}
+        if (cats == null || cats.isEmpty()) {
+            System.out.println("Invalid cat ID.");
+            return null;
+        }
+        for (Cat c : cats) {
+            if (c.getId() == id) return c;
+        }
+        System.out.println("Invalid cat ID.");
+        return null;
+    }
 
 	/**
 	 * Add a cat to the list of cats.
